@@ -15,13 +15,12 @@ module.exports = {
       },
       role: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      passoword: {
+      password: {
         type: Sequelize.STRING,
         allowNull: false,
       }
