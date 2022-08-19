@@ -1,5 +1,6 @@
 import * as Joi from 'joi';
 import { IUserLogin } from '../interface/IUserLogin';
+import ValidationError from './ValidationError';
 
 const runSchema = (user: IUserLogin) => {
   const schema = Joi.object({
@@ -10,8 +11,7 @@ const runSchema = (user: IUserLogin) => {
   const { error, value } = schema.validate(user);
 
   if (error) {
-    error.message = 'All fields must be filled';
-    throw error;
+    throw new ValidationError(400, 'All fields must be filled');
   }
 
   return value;
