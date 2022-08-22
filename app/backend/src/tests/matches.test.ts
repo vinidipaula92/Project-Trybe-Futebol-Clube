@@ -71,6 +71,22 @@ const matchesMock = [
     }
   ];
 
+  const saveMatchMock = {
+    "homeTeam": 16, 
+    "awayTeam": 8, 
+    "homeTeamGoals": 2,
+    "awayTeamGoals": 2
+  }
+
+  const saveMatchMockSucess = {
+    "id": 1,
+    "homeTeam": 16,
+    "homeTeamGoals": 2,
+    "awayTeam": 8,
+    "awayTeamGoals": 2,
+    "inProgress": true,
+  }
+
   describe('Tela de partidas', () => {
 
   describe('List', () => {
@@ -90,6 +106,24 @@ const matchesMock = [
       const response = await chai.request(app).get('/matches?inProgress=true');
 
       expect(response.status).to.equal(200);
+    });
+  });
+  describe('Post', () => {
+    beforeEach(() => {
+      Sinon.restore();
+    });
+    // it('deve retornar a partida inserida com inProgress sendo TRUE', async() => {
+    //   Sinon.stub(jwt, 'sign').returns(tokenMock as any);
+    //   Sinon.stub(Matches, 'create').resolves(saveMatchMock as Matches)
+    //   const response = await chai.request(app).post('/matches').send(saveMatchMock);
+
+    //   expect(response.body).to.equal(saveMatchMockSucess)
+    // });
+    it('Deve retornar um erro se o token for inválido', async() => {
+      const response = await chai.request(app).post('/matches').send(saveMatchMock);
+
+      expect(response.status).to.be.equal(401);
+      expect(response.body.message).to.be.equal('Token inválido')
     })
   });
 });

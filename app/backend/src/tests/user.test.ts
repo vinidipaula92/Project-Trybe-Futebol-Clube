@@ -22,7 +22,7 @@ const incorrectLoginMock = {
   password: "secret_user",
 }
 
-const tokenMock = "any-token";
+export const tokenMock = "any-token";
 
 const userMock = {
   id: 3,
