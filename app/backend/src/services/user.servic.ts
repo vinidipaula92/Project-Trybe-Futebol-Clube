@@ -24,10 +24,10 @@ export default class UserService implements ILoginService {
   }
 
   async getRole(token: string): Promise<User> {
-    const payload = JwtService.verify(token);
+    const { payload } = JwtService.verify(token);
     const user = await this.db.findOne({ where: { email: payload.email } });
     if (!user) {
-      throw new UnauthorizedeError(StatusCodes.UNAUTHORIZED, 'Usuário não encontrado');
+      throw new UnauthorizedeError(StatusCodes.NOT_FOUND, 'Usuário não encontrado');
     }
     return user as User;
   }

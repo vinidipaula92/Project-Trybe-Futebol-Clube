@@ -14,7 +14,7 @@ export default class UserController {
 
   async getRole(req: Request, res: Response) {
     const { authorization } = req.headers;
-    const user = await this.userService.getRole(authorization as string);
-    res.status(StatusCodes.OK).json(user.role);
+    const { role } = await this.userService.getRole(authorization as string);
+    res.status(StatusCodes.OK).json({ role });
   }
 }

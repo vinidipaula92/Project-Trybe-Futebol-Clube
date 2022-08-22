@@ -25,9 +25,9 @@ const incorrectLoginMock = {
 const tokenMock = "any-token";
 
 const userMock = {
-  id: 1,
+  id: 3,
   username: 'any-name',
-  role: 'any-role',
+  role: 'any-token',
   email: 'any-email',
   password: 'any-password'
 }
@@ -64,10 +64,6 @@ describe('Tela de Login', () => {
     });
 
     it('Deve retornar um erro ao tentar logar com dados nulos', async () => {
-      Sinon.stub(User, 'findOne').resolves(null);
-      Sinon.stub(PasswordService, 'comparePassword').returns(false);
-      Sinon.stub(jwt, 'sign').returns(tokenMock as any);
-
       const response = await chai.request(app)
         .post('/login')
         .send(userMock);
@@ -77,15 +73,21 @@ describe('Tela de Login', () => {
     });
 
     it('Deve retornar um erro ao tentar logar com dados inválidos', async () => {
-      Sinon.stub(User, 'findOne').resolves(userMock as User);
-      Sinon.stub(PasswordService, 'comparePassword').returns(false);
-      Sinon.stub(jwt, 'sign').returns(tokenMock as any);
-
       const response = await chai.request(app)
         .post('/login')
         .send(userMock);
 
       expect(response.status).to.be.equal(400);
       expect(response.body.message).to.be.equal('All fields must be filled');
+    });
+
+    it('Ao passar token inválido, deve retornar uma messagem de erro com status 401',async () => {
+      const response = await chai.request(app)
+      .get('/login/validate')
+      .set({authorization: tokenMock});
+
+      const { message } = response.body;
+      expect(response.status).to.be.equal(401)
+      expect(message).to.equal('Invalid token')
     });
   });
