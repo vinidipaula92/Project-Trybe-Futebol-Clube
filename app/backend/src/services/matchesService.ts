@@ -1,9 +1,14 @@
+import { StatusCodes } from 'http-status-codes';
 import Matches from '../database/models/matches.model';
 import Teams from '../database/models/teams.model';
-import { IMatches, IMatchesGet } from '../interface/IMatches';
+import User from '../database/models/user.model';
+import { IMatches, IMatchesGet, INewMatch } from '../interface/IMatches';
+import UnauthorizedeError from '../validations/UnhathorizedError';
+import JwtService from './JwtService';
 
 export default class MatchesService implements IMatchesGet {
   private db = Matches;
+  private dbUser = User;
   private homeTeam = {
     model: Teams,
     as: 'teamHome',
@@ -28,5 +33,15 @@ export default class MatchesService implements IMatchesGet {
       include: [this.homeTeam, this.awayTeam],
     });
     return matches as IMatches[];
+  }
+
+  async getSaveMatch(token: string, data: INewMatch): Promise<INewMatch> {
+    const { payload } = JwtService.verify(token);
+    const user = await this.dbUser.findOne({ where: { email: payload.email } });
+    if (!user) {
+      throw new UnauthorizedeError(StatusCodes.NOT_FOUND, 'Usuário não encontrado');
+    }
+    const match = await this.db.create({ ...data, inProgress: true });
+    return match;
   }
 }

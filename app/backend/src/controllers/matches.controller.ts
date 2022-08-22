@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { IMatchesGet } from '../interface/IMatches';
+import ValidationError from '../validations/ValidationError';
 
 export default class MatchesController {
   constructor(private matchesController: IMatchesGet) { }
@@ -12,5 +13,15 @@ export default class MatchesController {
     }
     const matchesFinished = await this.matchesController.getMatches(false);
     return res.status(StatusCodes.OK).json(matchesFinished);
+  }
+
+  async getSaveMatch(req: Request, res: Response) {
+    const { authorization } = req.headers;
+    if (!authorization) {
+      throw new ValidationError(401, 'Token inválido');
+    }
+    const data = req.body;
+    const newMatch = await this.matchesController.getSaveMatch(authorization, data);
+    res.status(StatusCodes.CREATED).json(newMatch);
   }
 }
