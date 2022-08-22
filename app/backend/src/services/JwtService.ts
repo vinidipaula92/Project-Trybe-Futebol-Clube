@@ -8,8 +8,9 @@ export default class JwtService {
     return secret;
   }
 
-  static verify(token: string): string {
+  static verify(token: string) {
     const secret = process.env.JWT_SECRET as string;
-    return jwt.verify(token, secret) as string;
+    const payload = jwt.verify(token, secret);
+    return payload as jwt.JwtPayload;
   }
 }

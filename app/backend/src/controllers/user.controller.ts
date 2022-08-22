@@ -11,4 +11,10 @@ export default class UserController {
     const token = await this.userService.Login(validate);
     res.status(StatusCodes.OK).json({ token });
   }
+
+  async getRole(req: Request, res: Response) {
+    const { authorization } = req.headers;
+    const user = await this.userService.getRole(authorization as string);
+    res.status(StatusCodes.OK).json(user.role);
+  }
 }
