@@ -1,9 +1,7 @@
 import Teams from '../database/models/teams.model';
-import { ITeamsName } from '../interface/ITeams';
+import { ITeams, ITeamsName } from '../interface/ITeams';
 
-export default class TeamsService implements ITeamsName {
-  id?: number | undefined;
-  teamName: string;
+export default class TeamsService implements ITeams {
   private db = Teams;
 
   async getTeams(): Promise<ITeamsName[]> {
