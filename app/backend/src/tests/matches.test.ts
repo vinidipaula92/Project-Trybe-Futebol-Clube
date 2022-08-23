@@ -4,7 +4,7 @@ import * as Sinon from 'sinon';
 import { app } from '../app';
 import Matches from '../database/models/matches.model';
 import { INewMatch } from '../interface/IMatches';
-import { tokenMock } from './user.test';
+import { tokenMock, validToken } from './user.test';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
@@ -82,7 +82,7 @@ const matchesMock = [
   }
 
   const saveMatchMockSucess = {
-    id: 1,
+    id: 54,
     homeTeam: 16,
     homeTeamGoals: 2,
     awayTeam: 8,
@@ -118,26 +118,22 @@ const matchesMock = [
   });
   describe('Post', () => {
     beforeEach(() => {
-      Sinon.stub(jwt, 'sign').returns(tokenMock as any);
-    });
-    afterEach(() => {
       Sinon.restore();
-    })
+    });
     it('Deve retornar um erro se o token for inválido', async() => {
       const response = await chai.request(app).post('/matches').send(saveMatchMock);
 
       expect(response.status).to.be.equal(401);
       expect(response.body.message).to.be.equal('Token must be a valid token')
     });
-    // it('Deve retornar um erro se o usuário não for encontrado', async() => {
-    //   Sinon.stub(Matches, 'create').callsFake(() => {
-    //     throw new ValidationError(401, 'Usuário não encontrado');
-    //   })
-    //   const response = await chai.request(app).post('/matches').send(saveMatchMock);
+    it('Deve ser criado uma nova partida com os respectivos times e placares', async() => {
+      Sinon.stub(jwt, 'sign').returns(tokenMock as any).resolves(saveMatchMockSucess);
 
-    //   expect(response.body.message).to.be.equal('Usuário não encontrado');
-    //   expect(response.status).to.equal(401)
-    // })
+      const response = await chai.request(app).post('/matches')
+      .send(saveMatchMock).set('authorization', validToken);
+
+      expect(response.status).to.equal(201)
+    })
   });
   describe('PATCH', () => {
     beforeEach(() => {

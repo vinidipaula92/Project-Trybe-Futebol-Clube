@@ -5,7 +5,6 @@ import UnauthorizedeError from '../validations/UnhathorizedError';
 import ValidationError from '../validations/ValidationError';
 import JwtService from './JwtService';
 import PasswordService from './passwordService';
-// import PasswordService from './password.servic';
 
 export default class UserService implements ILoginService {
   private db = User;
