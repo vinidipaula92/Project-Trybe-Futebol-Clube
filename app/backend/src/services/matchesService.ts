@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import Matches from '../database/models/matches.model';
 import Teams from '../database/models/teams.model';
 import User from '../database/models/user.model';
-import { IMatches, IMatchesGet, INewMatch } from '../interface/IMatches';
+import { IMatches, IMatchesGet, INewMatch, IUpdateTeams } from '../interface/IMatches';
 import UnauthorizedeError from '../validations/UnhathorizedError';
 import ValidationError from '../validations/ValidationError';
 import JwtService from './JwtService';
@@ -52,11 +52,18 @@ export default class MatchesService implements IMatchesGet {
     return match;
   }
 
-  async finishMatch(id: number): Promise<Matches> {
-    const match = await this.db.findByPk(id);
-    if (!match) {
-      throw new ValidationError(401, 'Partida não encontrada');
-    }
-    return match;
+  async finishMatch(id: number): Promise<void> {
+    await this.db.update({
+      inProgress: false,
+    }, { where: { id } });
+  }
+
+  async updateMatch(updateData: IUpdateTeams, id: number): Promise<void> {
+    const { homeTeamGoals, awayTeamGoals } = updateData;
+    await this.db.update({
+      homeTeamGoals, awayTeamGoals,
+    }, {
+      where: { id },
+    });
   }
 }

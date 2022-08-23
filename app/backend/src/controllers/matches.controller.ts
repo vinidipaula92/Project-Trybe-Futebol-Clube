@@ -30,4 +30,10 @@ export default class MatchesController {
     await this.matchesController.finishMatch(Number(id));
     res.status(StatusCodes.OK).json({ message: 'Finished' });
   }
+
+  async updateMatch(req: Request, res: Response) {
+    const { id } = req.params;
+    await this.matchesController.updateMatch(req.body, Number(id));
+    res.status(StatusCodes.OK).json({ message: 'Placar atualizado' });
+  }
 }

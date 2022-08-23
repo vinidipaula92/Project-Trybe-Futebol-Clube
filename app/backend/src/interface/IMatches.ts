@@ -16,8 +16,14 @@ export interface INewMatch {
   awayTeamGoals: number,
 }
 
+export interface IUpdateTeams {
+  homeTeamGoals: number,
+  awayTeamGoals: number,
+}
+
 export interface IMatchesGet {
   getMatches(inProgressMatch: boolean): Promise<IMatches[]>
   getSaveMatch(token: string, data: INewMatch): Promise<INewMatch>
-  finishMatch(id: number): Promise<Matches>
+  finishMatch(id: number): Promise<void>
+  updateMatch(updateData: IUpdateTeams, id: number): Promise<void>
 }
