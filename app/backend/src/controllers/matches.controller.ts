@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { IMatchesGet } from '../interface/IMatches';
-import ValidationError from '../validations/ValidationError';
+import UnauthorizedeError from '../validations/UnhathorizedError';
 
 export default class MatchesController {
   constructor(private matchesController: IMatchesGet) { }
@@ -18,7 +18,7 @@ export default class MatchesController {
   async getSaveMatch(req: Request, res: Response) {
     const { authorization } = req.headers;
     if (!authorization) {
-      throw new ValidationError(401, 'Token must be a valid token');
+      throw new UnauthorizedeError(StatusCodes.UNAUTHORIZED, 'Token must be a valid token');
     }
     const data = req.body;
     const newMatch = await this.matchesController.getSaveMatch(authorization, data);
