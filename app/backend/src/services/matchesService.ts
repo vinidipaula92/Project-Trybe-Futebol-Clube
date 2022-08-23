@@ -46,7 +46,7 @@ export default class MatchesService implements IMatchesGet {
     if (!dataToken) {
       throw new UnauthorizedeError(StatusCodes.UNAUTHORIZED, 'Token must be a valid token');
     }
-    if (findTeamHome === findTeamAway) {
+    if (findTeamHome?.id === findTeamAway?.id) {
       throw new ValidationError(StatusCodes
         .UNAUTHORIZED, 'It is not possible to create a match with two equal teams');
     }
