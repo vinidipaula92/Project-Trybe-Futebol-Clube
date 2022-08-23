@@ -18,10 +18,16 @@ export default class MatchesController {
   async getSaveMatch(req: Request, res: Response) {
     const { authorization } = req.headers;
     if (!authorization) {
-      throw new ValidationError(401, 'Token inválido');
+      throw new ValidationError(401, 'Token must be a valid token');
     }
     const data = req.body;
     const newMatch = await this.matchesController.getSaveMatch(authorization, data);
     res.status(StatusCodes.CREATED).json(newMatch);
+  }
+
+  async finishMatch(req: Request, res: Response) {
+    const { id } = req.params;
+    await this.matchesController.finishMatch(Number(id));
+    res.status(StatusCodes.OK).json({ message: 'Finished' });
   }
 }

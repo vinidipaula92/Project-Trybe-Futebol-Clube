@@ -4,6 +4,7 @@ import * as Sinon from 'sinon';
 import { app } from '../app';
 import User from '../database/models/user.model';
 import PasswordService from '../services/passwordService';
+import UnauthorizedeError from '../validations/UnhathorizedError';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
@@ -89,5 +90,13 @@ describe('Tela de Login', () => {
       const { message } = response.body;
       expect(response.status).to.be.equal(401)
       expect(message).to.equal('Invalid token')
+    });
+    it('Deve retornar um UnauthorizedeError', async() => {
+      Sinon.stub(User, 'findOne').callsFake(() => {
+        throw new UnauthorizedeError(404, 'Usuário não encontrado');
+      });
+      const response = await chai.request(app).get('/users').send(loginMock);
+      
+      expect(response.status).to.equal(404)
     });
   });

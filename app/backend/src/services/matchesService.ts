@@ -4,6 +4,7 @@ import Teams from '../database/models/teams.model';
 import User from '../database/models/user.model';
 import { IMatches, IMatchesGet, INewMatch } from '../interface/IMatches';
 import UnauthorizedeError from '../validations/UnhathorizedError';
+import ValidationError from '../validations/ValidationError';
 import JwtService from './JwtService';
 
 export default class MatchesService implements IMatchesGet {
@@ -41,7 +42,21 @@ export default class MatchesService implements IMatchesGet {
     if (!user) {
       throw new UnauthorizedeError(StatusCodes.NOT_FOUND, 'Usuário não encontrado');
     }
+    if (data.homeTeam === data.awayTeam) {
+      throw new ValidationError(401, 'It is not possible to create a match with two equal teams');
+    }
+    if (data.homeTeam === undefined || data.awayTeam === undefined) {
+      throw new ValidationError(404, 'There is no team with such id!');
+    }
     const match = await this.db.create({ ...data, inProgress: true });
+    return match;
+  }
+
+  async finishMatch(id: number): Promise<Matches> {
+    const match = await this.db.findByPk(id);
+    if (!match) {
+      throw new ValidationError(401, 'Partida não encontrada');
+    }
     return match;
   }
 }

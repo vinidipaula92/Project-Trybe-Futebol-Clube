@@ -19,4 +19,5 @@ export interface INewMatch {
 export interface IMatchesGet {
   getMatches(inProgressMatch: boolean): Promise<IMatches[]>
   getSaveMatch(token: string, data: INewMatch): Promise<INewMatch>
+  finishMatch(id: number): Promise<Matches>
 }

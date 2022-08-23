@@ -1,7 +1,10 @@
 import * as chai from 'chai';
+import * as jwt from 'jsonwebtoken';
 import * as Sinon from 'sinon';
 import { app } from '../app';
 import Matches from '../database/models/matches.model';
+import { INewMatch } from '../interface/IMatches';
+import { tokenMock } from './user.test';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
@@ -71,7 +74,7 @@ const matchesMock = [
     }
   ];
 
-  const saveMatchMock = {
+  const saveMatchMock: INewMatch = {
     "homeTeam": 16, 
     "awayTeam": 8, 
     "homeTeamGoals": 2,
@@ -110,20 +113,47 @@ const matchesMock = [
   });
   describe('Post', () => {
     beforeEach(() => {
-      Sinon.restore();
+      Sinon.stub(jwt, 'sign').returns(tokenMock as any);
     });
-    // it('deve retornar a partida inserida com inProgress sendo TRUE', async() => {
-    //   Sinon.stub(jwt, 'sign').returns(tokenMock as any);
-    //   Sinon.stub(Matches, 'create').resolves(saveMatchMock as Matches)
-    //   const response = await chai.request(app).post('/matches').send(saveMatchMock);
-
-    //   expect(response.body).to.equal(saveMatchMockSucess)
-    // });
+    afterEach(() => {
+      Sinon.restore();
+    })
     it('Deve retornar um erro se o token for inválido', async() => {
       const response = await chai.request(app).post('/matches').send(saveMatchMock);
 
       expect(response.status).to.be.equal(401);
-      expect(response.body.message).to.be.equal('Token inválido')
+      expect(response.body.message).to.be.equal('Token must be a valid token')
+    });
+    // it('Deve retornar um erro se o usuário não for encontrado', async() => {
+    //   Sinon.stub(Matches, 'create').callsFake(() => {
+    //     throw new ValidationError(401, 'Usuário não encontrado');
+    //   })
+    //   const response = await chai.request(app).post('/matches').send(saveMatchMock);
+
+    //   expect(response.body.message).to.be.equal('Usuário não encontrado');
+    //   expect(response.status).to.equal(401)
+    // })
+  });
+  describe('GET', () => {
+    beforeEach(() => {
+      Sinon.restore();
+    });
+    it('Deve retornar uma messagem "Finished" se a partida for finalizada', async() => {
+      Sinon.stub(Matches, 'findByPk').resolves(saveMatchMockSucess as Matches)
+      
+      const response = await chai.request(app).get('/matches/1/finish');
+
+      expect(response.status).to.be.equal(200);
+      expect(response.body.message).to.be.equal('Finished')
+    });
+    it('Deve retornar um messagem de erro caso a partida não for encontrada', async() => {
+      Sinon.restore();
+
+      Sinon.stub(Matches, 'findByPk').resolves(null)
+      const response = await chai.request(app).get('/matches/100/finish');
+
+      expect(response.status).to.be.equal(401);
+      expect(response.body.message).to.be.equal('Partida não encontrada')
     })
   });
 });
