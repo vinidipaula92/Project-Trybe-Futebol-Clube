@@ -15,7 +15,7 @@ export default class JwtService {
       const payload = jwt.verify(token, secret);
       return payload as jwt.JwtPayload;
     } catch (error) {
-      throw new ValidationError(401, 'Invalid token');
+      throw new ValidationError(401, 'Token must be a valid token');
     }
   }
 }

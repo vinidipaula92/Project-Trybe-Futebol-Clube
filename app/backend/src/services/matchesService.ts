@@ -39,19 +39,18 @@ export default class MatchesService implements IMatchesGet {
   // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInBhc3N3b3JkIjoic2VjcmV0X3VzZXIifSwiaWF0IjoxNjYxMjI0OTI3fQ.5MpWKGWYQ2raaSatSi97aCYOTZSSej2Few8hkfJDfd8
 
   async getSaveMatch(token: string, data: INewMatch): Promise<INewMatch> {
-    const { payload } = JwtService.verify(token);
-    if (!payload) {
+    const { homeTeam, awayTeam } = data;
+    const findTeamHome = await Teams.findByPk(homeTeam);
+    const findTeamAway = await Teams.findByPk(awayTeam);
+    const dataToken = JwtService.verify(token);
+    if (!dataToken) {
       throw new UnauthorizedeError(StatusCodes.UNAUTHORIZED, 'Token must be a valid token');
     }
-    const user = await this.dbUser.findOne({ where: { email: payload.email } });
-    if (!user) {
-      throw new UnauthorizedeError(StatusCodes.NOT_FOUND, 'Usuário não encontrado');
-    }
-    if (data.homeTeam === data.awayTeam) {
+    if (findTeamHome === findTeamAway) {
       throw new ValidationError(StatusCodes
-        .NOT_FOUND, 'It is not possible to create a match with two equal teams');
+        .UNAUTHORIZED, 'It is not possible to create a match with two equal teams');
     }
-    if (data.homeTeam === undefined || data.awayTeam === undefined) {
+    if (!findTeamHome || !findTeamAway) {
       throw new ValidationError(StatusCodes.NOT_FOUND, 'There is no team with such id!');
     }
     const match = await this.db.create({ ...data, inProgress: true });

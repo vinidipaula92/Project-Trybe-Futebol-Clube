@@ -89,7 +89,7 @@ describe('Tela de Login', () => {
 
       const { message } = response.body;
       expect(response.status).to.be.equal(401)
-      expect(message).to.equal('Invalid token')
+      expect(message).to.equal('Token must be a valid token')
     });
     it('Deve retornar um UnauthorizedeError', async() => {
       Sinon.stub(User, 'findOne').callsFake(() => {

@@ -14,80 +14,85 @@ const { expect } = chai;
 
 const matchesMock = [
     {
-      "id": 1,
-      "homeTeam": 16,
-      "homeTeamGoals": 1,
-      "awayTeam": 8,
-      "awayTeamGoals": 1,
-      "inProgress": false,
-      "teamHome": {
-        "teamName": "São Paulo"
+      id: 1,
+      homeTeam: 16,
+      homeTeamGoals: 1,
+      awayTeam: 8,
+      awayTeamGoals: 1,
+      inProgress: false,
+      teamHome: {
+        teamName: "São Paulo"
       },
-      "teamAway": {
-        "teamName": "Grêmio"
+      teamAway: {
+        teamName: "Grêmio"
       }
     },
     {
-      "id": 41,
-      "homeTeam": 16,
-      "homeTeamGoals": 2,
-      "awayTeam": 9,
-      "awayTeamGoals": 0,
-      "inProgress": true,
-      "teamHome": {
-        "teamName": "São Paulo"
+      id: 41,
+      homeTeam: 16,
+      homeTeamGoals: 2,
+      awayTeam: 9,
+      awayTeamGoals: 0,
+      inProgress: true,
+      teamHome: {
+        teamName: "São Paulo"
       },
-      "teamAway": {
-        "teamName": "Internacional"
+      teamAway: {
+        teamName: "Internacional"
       }
     }
   ];
 
   const matchesInProgressMock = [
     {
-      "id": 41,
-      "homeTeam": 16,
-      "homeTeamGoals": 2,
-      "awayTeam": 9,
-      "awayTeamGoals": 0,
-      "inProgress": true,
-      "teamHome": {
-        "teamName": "São Paulo"
+      id: 41,
+      homeTeam: 16,
+      homeTeamGoals: 2,
+      awayTeam: 9,
+      awayTeamGoals: 0,
+      inProgress: true,
+      teamHome: {
+        teamName: "São Paulo"
       },
-      "teamAway": {
-        "teamName": "Internacional"
+      teamAway: {
+        teamName: "Internacional"
       }
     },
     {
-      "id": 42,
-      "homeTeam": 6,
-      "homeTeamGoals": 1,
-      "awayTeam": 1,
-      "awayTeamGoals": 0,
-      "inProgress": true,
-      "teamHome": {
-        "teamName": "Ferroviária"
+      id: 42,
+      homeTeam: 6,
+      homeTeamGoals: 1,
+      awayTeam: 1,
+      awayTeamGoals: 0,
+      inProgress: true,
+      teamHome: {
+        teamName: "Ferroviária"
       },
-      "teamAway": {
-        "teamName": "Avaí/Kindermann"
+      teamAway: {
+        teamName: "Avaí/Kindermann"
       }
     }
   ];
 
   const saveMatchMock: INewMatch = {
-    "homeTeam": 16, 
-    "awayTeam": 8, 
-    "homeTeamGoals": 2,
-    "awayTeamGoals": 2
+    homeTeam: 16, 
+    awayTeam: 8, 
+    homeTeamGoals: 2,
+    awayTeamGoals: 2
   }
 
   const saveMatchMockSucess = {
-    "id": 1,
-    "homeTeam": 16,
-    "homeTeamGoals": 2,
-    "awayTeam": 8,
-    "awayTeamGoals": 2,
-    "inProgress": true,
+    id: 1,
+    homeTeam: 16,
+    homeTeamGoals: 2,
+    awayTeam: 8,
+    awayTeamGoals: 2,
+    inProgress: true,
+  }
+
+  const updateMock = {
+    homeTeamGoals: 3,
+    awayTeamGoals: 1
   }
 
   describe('Tela de partidas', () => {
@@ -134,26 +139,24 @@ const matchesMock = [
     //   expect(response.status).to.equal(401)
     // })
   });
-  describe('GET', () => {
+  describe('PATCH', () => {
     beforeEach(() => {
       Sinon.restore();
     });
     it('Deve retornar uma messagem "Finished" se a partida for finalizada', async() => {
-      Sinon.stub(Matches, 'findByPk').resolves(saveMatchMockSucess as Matches)
+      Sinon.stub(Matches, 'update').resolves()
       
-      const response = await chai.request(app).get('/matches/1/finish');
+      const response = await chai.request(app).patch('/matches/1/finish');
 
       expect(response.status).to.be.equal(200);
       expect(response.body.message).to.be.equal('Finished')
     });
-    it('Deve retornar um messagem de erro caso a partida não for encontrada', async() => {
-      Sinon.restore();
+    it('Deve retornar o status 200 quando for atualizado a partida em andamento', async() => {
+      Sinon.stub(Matches, 'update').resolves();
 
-      Sinon.stub(Matches, 'findByPk').resolves(null)
-      const response = await chai.request(app).get('/matches/100/finish');
+      const response = await chai.request(app).patch('/matches/1').send(updateMock);
 
-      expect(response.status).to.be.equal(401);
-      expect(response.body.message).to.be.equal('Partida não encontrada')
+      expect(response.status).to.be.equal(200)
     })
   });
 });
