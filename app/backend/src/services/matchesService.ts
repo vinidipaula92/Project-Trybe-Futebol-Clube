@@ -1,7 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import Matches from '../database/models/matches.model';
 import Teams from '../database/models/teams.model';
-import User from '../database/models/user.model';
 import { IMatches, IMatchesGet, INewMatch, IUpdateTeams } from '../interface/IMatches';
 import UnauthorizedeError from '../validations/UnhathorizedError';
 import ValidationError from '../validations/ValidationError';
@@ -9,7 +8,6 @@ import JwtService from './JwtService';
 
 export default class MatchesService implements IMatchesGet {
   private db = Matches;
-  private dbUser = User;
   private homeTeam = {
     model: Teams,
     as: 'teamHome',
