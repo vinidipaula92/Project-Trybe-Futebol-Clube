@@ -20,6 +20,13 @@ export default class MatchesService implements IMatchesGet {
     attributes: ['teamName'],
   };
 
+  async getMatchesAll(): Promise<IMatches[]> {
+    const matches = await this.db.findAll({
+      include: [this.homeTeam, this.awayTeam],
+    });
+    return matches as IMatches[];
+  }
+
   async getMatches(inProgressMatch: boolean): Promise<IMatches[]> {
     if (inProgressMatch) {
       const matches = await this.db.findAll({
@@ -30,6 +37,7 @@ export default class MatchesService implements IMatchesGet {
     }
     const matches = await this.db.findAll({
       include: [this.homeTeam, this.awayTeam],
+      where: { inProgress: false },
     });
     return matches as IMatches[];
   }

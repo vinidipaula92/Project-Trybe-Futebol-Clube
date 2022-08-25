@@ -22,6 +22,7 @@ export interface IUpdateTeams {
 }
 
 export interface IMatchesGet {
+  getMatchesAll(): Promise<IMatches[]>
   getMatches(inProgressMatch: boolean): Promise<IMatches[]>
   getSaveMatch(token: string, data: INewMatch): Promise<INewMatch>
   finishMatch(id: number): Promise<void>
