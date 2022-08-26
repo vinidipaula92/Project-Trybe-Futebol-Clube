@@ -11,7 +11,7 @@ export default class MatchesController {
       const matchesInProgress = await this.matchesController.getMatches(true);
       return res.status(StatusCodes.OK).json(matchesInProgress);
     }
-    const matchesFinished = await this.matchesController.getMatchesAll();
+    const matchesFinished = await this.matchesController.getMatches(false);
     return res.status(StatusCodes.OK).json(matchesFinished);
   }
 

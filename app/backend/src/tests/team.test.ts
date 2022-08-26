@@ -12,21 +12,21 @@ const { expect } = chai;
 const teamsMock = [
   {
     "id": 1,
-    "teamName": "Avaí/Kindermann"
+    "teamName": 'América-MG'
   },
   {
     "id": 2,
-    "teamName": "Bahia"
+    "teamName": 'Athletico-PR'
   },
   {
     "id": 3,
-    "teamName": "Botafogo"
+    "teamName": 'Atlético-GO'
   },
 ]
 
 const teamMock = {
   "id": 5,
-  "teamName": "Cruzeiro"
+  "teamName": 'Avaí'
 }
 
 describe('Tela de Times', () => {
