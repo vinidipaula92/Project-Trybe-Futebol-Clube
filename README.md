@@ -1,4 +1,4 @@
-# Seja bem vindo ao projeto Trybe-Futebol-Clube! ⚽️
+# Seja bem vindo ao projeto Trybe Futebol Clube! ⚽️
 
 ## Stack utilizada
 
