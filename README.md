@@ -3,11 +3,11 @@
 ## Stack utilizada
 
 **Back-end:** 
-*Typescript com Conceitos POO e SOLID;
-*NodeJs;
-*Express;
-*Sequelize;
-*Mocha, Chai e Sinon para testes de integração e Docker;
+- Typescript com Conceitos POO e SOLID;
+- NodeJs;
+- Express;
+- Sequelize;
+- Mocha, Chai e Sinon para testes de integração e Docker;
 
 <details>
   <summary><strong>👨‍💻 O que foi desenvolvido</strong></summary>
